@@ -1,7 +1,13 @@
 USE [Delivery]
 GO
 
-CREATE TABLE [dbo].[Despachos](
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Despachos_Historial](
 	[Número de pedido] [nvarchar](50) NULL,
 	[Remito] [nvarchar](50) NULL,
 	[T&T] [nvarchar](50) NULL,

@@ -1,6 +1,32 @@
-UPDATE Despachos_Historial
-SET
-		[CP]=[0_DESPACHOS_FAN].[CP del Destinatario]
+USE [Delivery]
+GO
+
+SELECT [Número de pedido]
+      ,[Remito]
+      ,[T&T]
+      ,[Cuid]
+      ,[Fecha de Creacion del Pedido]
+      ,[Fecha ultimo estado de MEC]
+      ,[N° Cuenta]
+      ,[Factura de venta]
+      ,[Estado]
+      ,[Fulfillment Status]
+      ,[Tracking Status]
+      ,[Estado MEC]
+      ,[Descripción estado MEC]
+      ,[Tipo Gestión]
+      ,[Tipo Producto]
+      ,[Descripcion del Producto]
+      ,[NMU]
+      ,[IMEI-IMSI]
+      ,[Canal Venta]
+      ,[Equipo Creador]
+      ,[Usuario Creador]
+      ,[Bodega Delivery]
+      ,[Operador Logistico]
+      ,[Tipo de entrega]
+      ,[ID Contrato distribucion]
+      ,[CP]
       ,[Sucursal de Distribución]
       ,[Destinatario]
       ,[Domicilio del Destinatario]
@@ -35,6 +61,20 @@ SET
       ,[Datos del Receptor]
       ,[Geolocalizacion]
       ,[Constancia electrónica de entrega]
- FROM [0_DESPACHOS_FAN]
-INNER JOIN [0_DESPACHOS_FAN] ON Despachos_Historial.Remito = [0_DESPACHOS_FAN].[Trans ID - Remito]
-WHERE Despachos_Historial.Columna1 IS NULL OR Despachos_Historial.Columna2 IS NULL
+      ,[Zona de Entrega]
+      ,[Efectividad de Entrega]
+      ,[LD FF]
+      ,[LD PROCES]
+      ,[LD ENTREGA]
+      ,[LD TOTAL]
+      ,[Promesa]
+      ,[GAP]
+      ,[Cumple Promesa]
+      ,[Avance de la Distribucion]
+      ,[Zona Correo]
+  FROM [dbo].[Despachos]
+  WHERE [Estado MEC] = 'En Devolucion'
+
+GO
+
+

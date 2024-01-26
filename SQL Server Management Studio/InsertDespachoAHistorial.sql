@@ -7,6 +7,5 @@ WHERE NOT EXISTS (
     SELECT 1
     FROM Despachos_Historial
     WHERE Despachos.Remito = Despachos_Historial.Remito
-);
-
-/** estados ( que estado es necesario para pegar automatico en despacho historial */
+)
+AND ([Estado del Correo] = 'ENTREGADO' OR Despachos.[Fecha de Creacion del Pedido] < DATEADD(day, -15, GETDATE()));

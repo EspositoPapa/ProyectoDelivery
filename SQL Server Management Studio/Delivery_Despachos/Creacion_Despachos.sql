@@ -2,9 +2,9 @@
 /**DELETE Delivery.dbo.MEC;
 DELETE Delivery.dbo.CRM;
 DELETE Delivery.dbo.Urbano;
-DELETE Delivery.dbo.Andreani;
+DELETE Delivery.dbo.Andreani;**/
 DELETE Delivery.dbo.union_CRMMEC;
-DELETE Delivery.dbo.Despachos;**/
+DELETE Delivery.dbo.Despachos;
 --*******************************************
 --ARREGLO MEC
 /**UPDATE CRM
@@ -16,15 +16,17 @@ SET [Delivery_Transaction_ID] =
     END;**/
 --*******************************************
 --union CRM
-INSERT INTO delivery.dbo.union_CRMMEC
-    ([Número de Pedido], Remito, [T&T], Cuid, [Fecha de Creacion del Pedido],
+Use Delivery
+
+INSERT INTO delivery.dbo.union_CRMMEC([Número de Pedido], Remito, [T&T], Cuid, [Fecha de Creacion del Pedido],
     [Fecha ultimo estado de MEC], [N° Cuenta], [Factura de venta], Estado, [Fulfillment Status], [Tracking Status],
     [Estado MEC], [Descripción estado MEC], [Tipo Gestión], [Tipo Producto], [Descripcion del Producto], NMU,
     [IMEI-IMSI], [Canal Venta], [Equipo Creador], [Usuario Creador], [Bodega Delivery])
+
 SELECT
     C.[Número de pedido],
-    M.remito,
-    M.nrotracking,
+	M.remito,
+	M.nrotracking,
     M.prodciud,
     C.[Fecha de creación],
     M.fechaingreso,
@@ -51,15 +53,6 @@ JOIN
 ON
     C.[Delivery Transaction ID] = M.remito;
 
-WITH CTE AS (
-    SELECT
-        [Número de Pedido],
-        [IMEI-IMSI],
-        ROW_NUMBER() OVER (PARTITION BY [Número de Pedido], [IMEI-IMSI] ORDER BY (SELECT NULL)) AS RowNum
-    FROM
-        delivery.dbo.union_CRMMEC
-)
-DELETE FROM CTE WHERE RowNum > 1;
 --***********************************************
 --Insertar Datos
 USE Delivery;
@@ -245,7 +238,7 @@ CASE
 	   ELSE '' 
 	   END
 FROM Andreani AS T1 
-JOIN Normalizarstatus AS T3 ON [T1].Estado= T3.Estado And T1.[Estado Detallado]=T3.[Estado detallado]
+JOIN Normalizarstatus AS T3 ON [OL]='ANDREANI'
 
 UPDATE Delivery.dbo.Despachos
 SET [Avance de la Distribucion]=
@@ -255,7 +248,7 @@ CASE
 	   ELSE '' 
 	   END
 FROM Urbano AS T1 
-JOIN Normalizarstatus AS T3 ON T1.Estado = t3.Estado
+JOIN Normalizarstatus AS T3 ON [OL]='URBANO'
 
 --***********************************************************************************************************
 ---Actualizacion 2
@@ -464,12 +457,4 @@ FROM dbo.Despachos
 --***********************************************************************************************************
 ---Pegar a Historial
 
-INSERT INTO Despachos_Historial
-SELECT *
-FROM Despachos
-WHERE NOT EXISTS (
-    SELECT 1
-    FROM Despachos_Historial
-    WHERE Despachos.Remito = Despachos_Historial.Remito
-)
-AND ([Estado del Correo] = 'ENTREGADO' OR Despachos.[Fecha de Creacion del Pedido] < DATEADD(day, -15, GETDATE()));
+
